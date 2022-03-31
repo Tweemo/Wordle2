@@ -13,6 +13,12 @@ router.get('/', (req, res) => {
 })
 
 router.post('/home', (req, res) => {
+  res.render('game')
+})
+
+router.post('/game', (req, res) => {
+  guesses = { guesses: [] }
+  counter = 0
   if (req.body.guess.length > 5) {
     res.render('tryAgain')
   } else if (req.body.guess.length < 5) {
@@ -21,13 +27,12 @@ router.post('/home', (req, res) => {
     db.getRandWord(req.body).then((word) => {
       guesses.guesses.push(req.body.guess)
       counter++
-      console.log(guesses)
       if (counter > 6) {
         res.send(
           `Unluggy too many guesses. The answer is ${word[randNum].word}`
         )
       } else if (counter <= 6) {
-        res.render('home', guesses)
+        res.render('game', guesses)
       }
 
       if (word[randNum].word == req.body.guess) {
